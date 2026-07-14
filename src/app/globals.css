@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-bg:           #0D1B1E;
+  --brand-surface:      #122428;
+  --brand-border:       #1E3A3F;
+  --brand-tosca:        #2A9D8F;
+  --brand-tosca-light:  #4ECDC4;
+  --brand-white:        #F5F5F5;
+  --brand-muted:        #8A9BA8;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  background-color: #0D1B1E;
+  color: #F5F5F5;
+  font-family: var(--font-geist), sans-serif;
+  scroll-behavior: smooth;
+}
