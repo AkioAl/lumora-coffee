@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, ArrowRight, ArrowUpRight, Navigation, Search, RotateCcw } from 'lucide-react'
 import { locations } from '@/data/locations'
 import LocationCard from '@/components/locations/LocationCard'
+import ConstellationMap from '@/components/locations/ConstellationMap'
+import { Location } from '@/types'
 import {
   calculateHaversineKm,
   formatDistanceAndEta,
@@ -21,6 +23,23 @@ export default function LocationsClient() {
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null)
   const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'active' | 'error'>('idle')
   const [now, setNow] = useState<Date | null>(null)
+  const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null)
+
+  const handleMapSelect = (loc: Location) => {
+    setSelectedBranchId(loc.id)
+    setActiveCity(loc.area === 'HQ' ? 'SEMUA' : loc.city.toUpperCase())
+    setSearchQuery('')
+  }
+
+  const handleMapClear = () => {
+    setSelectedBranchId(null)
+    setActiveCity('SEMUA')
+  }
+
+  const handleCityChange = (city: string) => {
+    setActiveCity(city)
+    setSelectedBranchId(null)
+  }
 
   useEffect(() => {
     setNow(new Date())
@@ -171,6 +190,16 @@ export default function LocationsClient() {
         </div>
       </div>
 
+      <div className="px-6 sm:px-8 lg:px-16 pt-10">
+        <ConstellationMap
+          selectedId={selectedBranchId}
+          onSelect={handleMapSelect}
+          onClear={handleMapClear}
+          now={now}
+          userCoords={userCoords}
+        />
+      </div>
+
       {hq && !userCoords && (
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -253,7 +282,7 @@ export default function LocationsClient() {
               <button
                 key={city}
                 type="button"
-                onClick={() => setActiveCity(city)}
+                onClick={() => handleCityChange(city)}
                 className="relative inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 text-xs font-mono font-bold tracking-widest transition-colors duration-200"
               >
                 {isActive && (

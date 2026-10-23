@@ -7,6 +7,7 @@ import { MapPin, ArrowRight, Navigation } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { locations } from '@/data/locations'
 import { Location } from '@/types'
+import ConstellationMap from '@/components/locations/ConstellationMap'
 import {
   BranchLiveStatus,
   calculateHaversineKm,
@@ -199,6 +200,10 @@ export default function BranchSection() {
           Izin lokasi tidak aktif di browser. Menampilkan cabang sorotan utama.
         </p>
       )}
+
+      <div className="px-6 sm:px-8 lg:px-16 mb-6">
+        <ConstellationMap variant="compact" />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 32 }}

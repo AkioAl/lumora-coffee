@@ -51,7 +51,7 @@ export default function WfcFloorplanBlueprint({
   )}`
 
   return (
-    <section className="px-6 sm:px-8 lg:px-16 py-12 bg-brand-bg">
+    <section id="wfc-denah" className="px-6 sm:px-8 lg:px-16 py-12 bg-brand-bg scroll-mt-[65px]">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
         <div>
           <p className="text-brand-tosca text-xs font-mono font-bold tracking-widest uppercase mb-2">

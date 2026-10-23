@@ -5,6 +5,8 @@ import { Award, Compass, Mic, Music, Package, Users, ArrowUpRight } from 'lucide
 import { programs } from '@/data/programs'
 import { brand } from '@/data/brand'
 import { Program } from '@/types'
+import MusikagramSynth from '@/components/home/MusikagramSynth'
+import NetizenPassport from '@/components/home/NetizenPassport'
 
 const iconMap: Record<Program['icon'], React.ElementType> = {
   music: Music,
@@ -89,6 +91,11 @@ export default function ProgramSection() {
             </motion.div>
           )
         })}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+        <MusikagramSynth />
+        <NetizenPassport />
       </div>
     </section>
   )

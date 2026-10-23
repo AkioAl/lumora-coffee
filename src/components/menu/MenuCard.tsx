@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Coffee, Heart, Plus, SlidersHorizontal, Check } from 'lucide-react'
 import { DrinkAddon, DrinkSweetness, DrinkTemp, MenuItem } from '@/types'
 import { formatPrice } from '@/lib/format'
+import TiltCard from '@/components/ui/TiltCard'
 import { useBaristaTicket, ADDON_PRICE_MAP } from '@/context/BaristaTicketContext'
 
 interface MenuCardProps {
@@ -63,13 +64,13 @@ export default function MenuCard({
     setTimeout(() => setJustAdded(false), 1800)
   }
 
-  return (
+  const card = (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut', delay: index * 0.05 }}
       className="
-        group flex flex-col
+        group flex flex-col h-full
         bg-brand-surface
         border border-brand-border
         hover:border-brand-tosca
@@ -285,4 +286,6 @@ export default function MenuCard({
       </div>
     </motion.article>
   )
+
+  return item.badge ? <TiltCard className="h-full">{card}</TiltCard> : card
 }

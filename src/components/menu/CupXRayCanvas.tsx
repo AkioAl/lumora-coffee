@@ -445,7 +445,7 @@ export default function CupXRayCanvas({
                 <span className="text-brand-white font-bold">{sensory.sweetness}/5</span>
               </div>
               <div>
-                <span className="text-brand-muted block">TEXTURE</span>
+                <span className="text-brand-muted block">CREAMINESS</span>
                 <span className="text-brand-white font-bold">{sensory.creaminess}/5</span>
               </div>
             </div>
@@ -463,11 +463,10 @@ export default function CupXRayCanvas({
               className="w-full min-h-[44px] inline-flex items-center justify-center gap-1.5 bg-brand-tosca hover:bg-brand-toscaLight text-brand-bg text-[11px] font-mono font-bold tracking-widest uppercase px-3 py-2 transition-colors mt-1"
             >
               <Plus className="w-3.5 h-3.5" />
-              PESAN DENGAN RACIKAN INI (
+              PESAN DENGAN RACIKAN INI
               {activeLayer.recommendedBoost && activeLayer.recommendedBoost !== 'Normal'
-                ? activeLayer.recommendedBoost.toUpperCase()
-                : 'TAKaran STANDAR'}
-              )
+                ? ` (${activeLayer.recommendedBoost.toUpperCase()})`
+                : ''}
             </button>
           )}
         </div>

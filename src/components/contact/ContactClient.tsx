@@ -3,8 +3,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { MessageCircle, Mail, Camera, Play, Tv, ArrowUpRight } from 'lucide-react'
+import { MessageCircle, Mail, Camera, Play, Tv, ArrowUpRight, MapPin } from 'lucide-react'
 import { brand } from '@/data/brand'
+import { locations } from '@/data/locations'
+import ConciergeDesk from '@/components/contact/ConciergeDesk'
+
+const hqBranch = locations.find((l) => l.area === 'HQ') ?? locations[0]
 
 const contactItems = [
   {
@@ -29,6 +33,14 @@ const contactItems = [
     value: brand.instagramHandle,
     href: brand.socialLinks.instagram,
     icon: Camera,
+    external: true,
+  },
+  {
+    platform: 'ALAMAT HQ',
+    desc: 'Kunjungi Cabang Pusat',
+    value: `${hqBranch.name}, ${hqBranch.city}`,
+    href: `https://www.google.com/maps/search/?api=1&query=${hqBranch.lat},${hqBranch.lng}`,
+    icon: MapPin,
     external: true,
   },
 ]
@@ -135,6 +147,8 @@ export default function ContactClient() {
           </motion.a>
         ))}
       </div>
+
+      <ConciergeDesk />
 
       <div className="px-6 sm:px-8 lg:px-16 py-16 sm:py-20 border-b border-brand-border">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">

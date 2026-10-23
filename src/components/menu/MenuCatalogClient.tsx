@@ -26,7 +26,9 @@ import { useBaristaTicket } from '@/context/BaristaTicketContext'
 import MenuCategoryTabs from '@/components/menu/MenuCategoryTabs'
 import MenuSubNav from '@/components/menu/MenuSubNav'
 import MenuCard from '@/components/menu/MenuCard'
-import CupXRayCanvas from '@/components/menu/CupXRayCanvas'
+import ItemXRay, { getXRayToggleLabel } from '@/components/menu/ItemXRay'
+import MoodCompass from '@/components/menu/MoodCompass'
+import { isDrinkCategory } from '@/lib/menu'
 
 const FAVORITES_STORAGE_KEY = 'lumora_favorite_menu_ids'
 
@@ -83,19 +85,20 @@ function FeaturedHero({
   const [selectedSweetness, setSelectedSweetness] = useState<'Normal 100%' | 'Less Sweet 50%'>('Normal 100%')
   const { addItem } = useBaristaTicket()
   const specs = categorySpecs[category]
-  const isDrink = category === 'kopi' || category === 'non-coffee'
+  const isDrink = isDrinkCategory(category)
 
   useEffect(() => {
     setImgError(false)
     setHeroView(item.layers ? 'xray' : 'photo')
   }, [item.id, item.layers])
 
-  const handleAddFeatured = (addon: DrinkAddon = 'Normal') => {
+  const handleAddFeatured = (addon: DrinkAddon = 'Normal', note?: string) => {
     addItem(item, {
       quantity: 1,
       temp: isDrink ? selectedTemp : undefined,
       sweetness: isDrink ? selectedSweetness : undefined,
       addon: isDrink ? addon : undefined,
+      note: isDrink ? undefined : note,
       openDrawerAfter: true,
     })
   }
@@ -151,7 +154,7 @@ function FeaturedHero({
 
               <div>
                 <span className="text-[10px] text-brand-muted tracking-widest uppercase block mb-1.5">
-                  TAKaran MANIS
+                  TAKARAN MANIS
                 </span>
                 <div className="grid grid-cols-2 gap-1.5">
                   {(['Normal 100%', 'Less Sweet 50%'] as const).map((s) => (
@@ -241,7 +244,7 @@ function FeaturedHero({
                     : 'bg-brand-bg border-brand-border text-brand-muted hover:text-brand-white'
                 }`}
               >
-                BEDAH X-RAY FLUIDA
+                {getXRayToggleLabel(item)}
               </button>
               <button
                 type="button"
@@ -259,11 +262,9 @@ function FeaturedHero({
           )}
 
           {heroView === 'xray' && item.layers ? (
-            <CupXRayCanvas
-              itemName={item.name}
-              layers={item.layers}
-              sensory={item.sensory}
-              onQuickOrderLayer={(addon) => handleAddFeatured(addon)}
+            <ItemXRay
+              item={item}
+              onOrder={({ addon, note }) => handleAddFeatured(addon, note)}
             />
           ) : (
             <div className="relative aspect-square max-w-md mx-auto md:max-w-none w-full overflow-hidden bg-brand-border border border-brand-tosca/40">
@@ -402,6 +403,8 @@ export default function MenuCatalogClient() {
           onToggleFavorite={toggleFavorite}
         />
       )}
+
+      <MoodCompass />
 
       <MenuSubNav
         activeTab={activeSubTab}

@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { menuItems } from '@/data/menu'
 import { MenuItem } from '@/types'
 import { formatPrice } from '@/lib/format'
+import TiltCard from '@/components/ui/TiltCard'
 
 const bestSellers = menuItems.filter((item) => item.badge !== null).slice(0, 4)
 
@@ -21,6 +22,7 @@ function BestSellerCard({ item, index }: { item: MenuItem; index: number }) {
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.55, ease: 'easeOut', delay: 0.08 + index * 0.08 }}
     >
+      <TiltCard className="h-full">
       <Link
         href="/menu"
         className="group flex flex-col h-full bg-brand-surface border border-brand-border hover:border-brand-tosca transition-all duration-300"
@@ -70,6 +72,7 @@ function BestSellerCard({ item, index }: { item: MenuItem; index: number }) {
           </p>
         </div>
       </Link>
+      </TiltCard>
     </motion.div>
   )
 }

@@ -2,12 +2,15 @@ export type MenuCategory = 'kopi' | 'non-coffee' | 'food' | 'snack' | 'dessert'
 
 export type MenuSubTab = 'overview' | 'signature' | 'best-seller' | 'favorites'
 
+export type PlatingRole = 'BASE' | 'CORE' | 'SAUCE' | 'GARNISH'
+
 export interface DrinkLayer {
   id: string
   name: string
   ratio: number
   color: string
   specNote: string
+  role?: PlatingRole
   recommendedBoost?: 'Normal' | '+Extra Espresso Shot' | '+Extra Sea Salt Foam'
 }
 
@@ -15,6 +18,12 @@ export interface SensoryProfile {
   body: number
   sweetness: number
   creaminess: number
+}
+
+export interface CulinaryProfile {
+  savory: number
+  texture: number
+  aroma: number
 }
 
 export interface MenuItem {
@@ -28,6 +37,7 @@ export interface MenuItem {
   image: string
   layers?: DrinkLayer[]
   sensory?: SensoryProfile
+  culinary?: CulinaryProfile
 }
 
 export type WfcZoneMode = 'wfc-power' | 'golden-hour' | 'communal'
