@@ -1,6 +1,10 @@
+export type MenuCategory = 'kopi' | 'non-coffee' | 'food' | 'snack' | 'dessert'
+
+export type MenuSubTab = 'overview' | 'signature' | 'best-seller' | 'favorites'
+
 export interface MenuItem {
   id: string
-  category: 'kopi' | 'non-coffee' | 'food' | 'snack' | 'dessert'
+  category: MenuCategory
   name: string
   description: string
   priceMin: number
@@ -16,6 +20,10 @@ export interface Location {
   city: string
   address: string
   operationalHours: string
+  openHour: number
+  closeHour: number
+  lat: number
+  lng: number
   mapsEmbedUrl: string
   facilities: string[]
   image: string
@@ -25,16 +33,21 @@ export interface Program {
   id: string
   name: string
   description: string
-  icon: string
+  schedule: string
+  icon: 'music' | 'award' | 'compass' | 'mic' | 'users' | 'package'
 }
 
 export interface BrandInfo {
   tagline: string
   subTagline: string
   hashtags: string[]
+  whatsappDisplay: string
+  emailAddress: string
+  instagramHandle: string
   socialLinks: {
     instagram: string
     tiktok: string
+    youtube: string
     whatsapp: string
     email: string
   }

@@ -3,27 +3,37 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Coffee } from 'lucide-react'
+import { Coffee, Heart, ArrowUpRight } from 'lucide-react'
 import { MenuItem } from '@/types'
+import { brand } from '@/data/brand'
+import { formatPrice } from '@/lib/format'
 
 interface MenuCardProps {
   item: MenuItem
   index?: number
+  isFavorite?: boolean
+  onToggleFavorite?: (id: string) => void
 }
 
-function formatPrice(min: number, max: number): string {
-  const fmt = (n: number) => `Rp ${n.toLocaleString('id-ID')}`
-  return min === max ? fmt(min) : `${fmt(min)} – ${fmt(max)}`
-}
-
-export default function MenuCard({ item, index = 0 }: MenuCardProps) {
+export default function MenuCard({
+  item,
+  index = 0,
+  isFavorite = false,
+  onToggleFavorite,
+}: MenuCardProps) {
   const [imgError, setImgError] = useState(false)
+  const [activeTouch, setActiveTouch] = useState(false)
+
+  const orderUrl = `${brand.socialLinks.whatsapp}?text=${encodeURIComponent(
+    `Halo Lumora Coffee, saya ingin pesan ${item.name} (${formatPrice(item.priceMin, item.priceMax)}).`
+  )}`
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: 'easeOut', delay: index * 0.07 }}
+      transition={{ duration: 0.4, ease: 'easeOut', delay: index * 0.05 }}
+      onClick={() => setActiveTouch((prev) => !prev)}
       className="
         group flex flex-col
         bg-brand-surface
@@ -31,10 +41,8 @@ export default function MenuCard({ item, index = 0 }: MenuCardProps) {
         hover:border-brand-tosca
         transition-colors duration-200
         overflow-hidden
-        cursor-pointer
       "
     >
-      {/* ── Foto area ─────────────────────────────────── */}
       <div className="relative aspect-square overflow-hidden bg-brand-border">
         {imgError ? (
           <div className="w-full h-full flex items-center justify-center">
@@ -45,54 +53,101 @@ export default function MenuCard({ item, index = 0 }: MenuCardProps) {
             src={item.image}
             alt={item.name}
             fill
-            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
             onError={() => setImgError(true)}
           />
         )}
 
-        {/* Badge SIGNATURE / BEST SELLER */}
         {item.badge && (
           <span className="
             absolute top-3 left-3 z-10
             bg-brand-tosca text-brand-bg
-            text-[10px] font-bold tracking-widest
-            px-2 py-1
+            text-[10px] font-mono font-bold tracking-widest
+            px-2.5 py-1 uppercase
           ">
             {item.badge}
           </span>
         )}
 
-        {/* ── Hover Reveal Overlay ─────────────────────── */}
-        <div className="
-          absolute inset-x-0 bottom-0 z-20
-          bg-brand-bg/90 backdrop-blur-sm
-          px-4 py-3
-          translate-y-full group-hover:translate-y-0
-          transition-transform duration-300 ease-out
-        ">
-          <p className="text-brand-tosca font-bold text-base leading-none">
-            {formatPrice(item.priceMin, item.priceMax)}
-          </p>
-          <p className="text-brand-muted text-[10px] mt-1 tracking-widest uppercase">
-            {item.badge ?? 'MENU'}
-          </p>
+        {onToggleFavorite && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onToggleFavorite(item.id)
+            }}
+            aria-label={isFavorite ? `Hapus ${item.name} dari favorit` : `Simpan ${item.name} ke favorit`}
+            aria-pressed={isFavorite}
+            className={`
+              absolute top-2 right-2 z-20
+              w-11 h-11 inline-flex items-center justify-center
+              border transition-colors duration-200
+              ${isFavorite
+                ? 'bg-brand-tosca border-brand-tosca text-brand-bg'
+                : 'bg-brand-bg/85 border-brand-border text-brand-white hover:border-brand-tosca hover:text-brand-tosca'
+              }
+            `}
+          >
+            <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
+          </button>
+        )}
+
+        <div
+          className={`
+            absolute inset-x-0 bottom-0 z-10
+            bg-brand-bg/95 backdrop-blur-sm border-t border-brand-border
+            px-4 py-3 flex items-center justify-between gap-2
+            transition-transform duration-300 ease-out
+            ${activeTouch ? 'translate-y-0' : 'translate-y-full group-hover:translate-y-0'}
+          `}
+        >
+          <div>
+            <p className="text-brand-tosca font-mono font-bold text-sm leading-none">
+              {formatPrice(item.priceMin, item.priceMax)}
+            </p>
+            <p className="text-brand-muted text-[10px] font-mono mt-1 tracking-widest uppercase">
+              {item.badge ?? item.category}
+            </p>
+          </div>
+          <a
+            href={orderUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center min-h-[36px] gap-1 bg-brand-tosca text-brand-bg px-3 py-1.5 text-[10px] font-mono font-bold tracking-widest uppercase hover:bg-brand-toscaLight transition-colors"
+          >
+            PESAN
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
         </div>
       </div>
 
-      {/* ── Konten bawah ──────────────────────────────── */}
-      <div className="p-4 flex flex-col flex-1">
-        <p className="text-brand-white font-bold text-sm tracking-wide">
-          {item.name}
-        </p>
-        <p className="text-brand-muted text-xs mt-1 leading-relaxed line-clamp-2">
-          {item.description}
-        </p>
-        <p className="mt-3 text-brand-tosca font-bold text-sm">
-          {formatPrice(item.priceMin, item.priceMax)}
-        </p>
-      </div>
+      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
+        <div>
+          <h3 className="text-brand-white font-bold text-base tracking-wide">
+            {item.name}
+          </h3>
+          <p className="text-brand-muted text-xs mt-1.5 leading-relaxed line-clamp-2">
+            {item.description}
+          </p>
+        </div>
 
-    </motion.div>
+        <div className="mt-4 pt-3 border-t border-brand-border/60 flex items-center justify-between gap-2">
+          <p className="text-brand-tosca font-mono font-bold text-sm">
+            {formatPrice(item.priceMin, item.priceMax)}
+          </p>
+          <a
+            href={orderUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center min-h-[44px] px-2 -mr-2 text-brand-muted hover:text-brand-tosca text-[11px] font-mono font-bold tracking-widest uppercase transition-colors"
+          >
+            PESAN WA
+          </a>
+        </div>
+      </div>
+    </motion.article>
   )
 }

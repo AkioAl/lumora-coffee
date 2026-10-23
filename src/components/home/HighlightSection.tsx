@@ -1,41 +1,44 @@
 'use client'
 
-import { motion, useInView } from 'framer-motion'
-import { useRef, useEffect, useState } from 'react'
+import { animate, motion, useInView, useReducedMotion } from 'framer-motion'
+import { useRef, useEffect } from 'react'
+import { brand } from '@/data/brand'
 
 function CountUp({ target, suffix = '' }: { target: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
-  const [count, setCount] = useState(0)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
-    if (!isInView) return
-    let start = 0
-    const duration = 1800
-    const step = Math.ceil(target / (duration / 16))
-    const timer = setInterval(() => {
-      start += step
-      if (start >= target) {
-        setCount(target)
-        clearInterval(timer)
-      } else {
-        setCount(start)
-      }
-    }, 16)
-    return () => clearInterval(timer)
-  }, [isInView, target])
+    const node = ref.current
+    if (!node || !isInView) return
+
+    if (prefersReducedMotion) {
+      node.textContent = `${target}${suffix}`
+      return
+    }
+
+    const controls = animate(0, target, {
+      duration: 1.4,
+      ease: 'easeOut',
+      onUpdate(value) {
+        node.textContent = `${Math.round(value)}${suffix}`
+      },
+    })
+
+    return () => controls.stop()
+  }, [isInView, prefersReducedMotion, suffix, target])
 
   return (
     <span ref={ref}>
-      {count}
-      {suffix}
+      0{suffix}
     </span>
   )
 }
 
 const stats = [
   {
-    value: 10,
+    value: brand.totalBranches,
     suffix: '+',
     label: 'Cabang',
     desc: 'Dari Jakarta, Depok, Bogor, Bekasi, Tangerang, Bandung, Semarang, hingga Surabaya.',
@@ -47,7 +50,7 @@ const stats = [
     desc: 'Ribuan orang memilih Lumora Coffee setiap minggunya sebagai tempat kerja dan ngopi favorit.',
   },
   {
-    value: 2018,
+    value: brand.foundedYear,
     suffix: '',
     label: 'Est.',
     desc: 'Berdiri sejak 2018, Lumora Coffee terus tumbuh menjadi rumah bagi para Netizen Indonesia.',
@@ -61,29 +64,28 @@ export default function HighlightSection() {
         {stats.map(({ value, suffix, label, desc }, i) => (
           <motion.div
             key={label}
-            initial={{ opacity: 0, y: 32 }}
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.7, ease: 'easeOut', delay: i * 0.12 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: i * 0.1 }}
             className={`
-              px-10 py-14 flex flex-col
+              px-6 sm:px-10 py-10 sm:py-14 flex flex-col
               ${i < stats.length - 1 ? 'border-b md:border-b-0 md:border-r border-brand-border' : ''}
             `}
           >
-            {/* Angka besar */}
-            <p className="text-brand-white font-bold text-[64px] lg:text-[80px] leading-none tracking-tight">
+            <p
+              className="text-brand-white font-bold leading-none tracking-tight"
+              style={{ fontSize: 'clamp(2.75rem, 6vw, 5rem)' }}
+            >
               <CountUp target={value} suffix={suffix} />
             </p>
 
-            {/* Label */}
-            <p className="text-brand-tosca text-xs font-bold tracking-[0.35em] uppercase mt-3">
+            <p className="text-brand-tosca text-xs font-mono font-bold tracking-[0.25em] uppercase mt-3">
               {label}
             </p>
 
-            {/* Divider */}
-            <div className="w-8 h-px bg-brand-border mt-5 mb-4" />
+            <div className="w-8 h-px bg-brand-border mt-4 mb-3" />
 
-            {/* Deskripsi */}
             <p className="text-brand-muted text-sm leading-relaxed max-w-xs">
               {desc}
             </p>

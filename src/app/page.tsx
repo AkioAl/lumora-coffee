@@ -3,31 +3,24 @@ import FeaturedDrinkSection from '@/components/home/FeaturedDrinkSection'
 import HighlightSection from '@/components/home/HighlightSection'
 import BestSellerSection from '@/components/home/BestSellerSection'
 import BranchSection from '@/components/home/BranchSection'
+import ProgramSection from '@/components/home/ProgramSection'
+import { brand } from '@/data/brand'
 
 export default function HomePage() {
   return (
     <main>
-      {/* 1. Hero — Parallax + Stats + Scroll Indicator */}
       <HeroSection />
-
-      {/* 2. Featured Drink — Sinematik 2 kolom */}
       <FeaturedDrinkSection />
-
-      {/* 3. Numbers — Count-up stats besar */}
       <HighlightSection />
-
-      {/* 4. Best Seller — Horizontal card carousel */}
       <BestSellerSection />
-
-      {/* 5. Branch — 3 foto landscape hover overlay */}
       <BranchSection />
+      <ProgramSection />
 
-      {/* 6. Hashtag Ticker */}
-      <section className="bg-brand-tosca py-4 overflow-hidden">
+      <section className="bg-brand-tosca py-4 overflow-hidden" aria-label="Hashtag komunitas Lumora">
         <div className="flex gap-12 animate-marquee whitespace-nowrap">
-          {Array(8).fill(null).map((_, i) => (
-            <span key={i} className="text-brand-bg font-bold text-sm tracking-widest shrink-0">
-              #LUMORACOFFEE &nbsp;•&nbsp; #RUMAHNYANETIZEN &nbsp;•&nbsp; #OOTDLUMORA &nbsp;•&nbsp;
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={i} className="text-brand-bg font-mono font-bold text-xs sm:text-sm tracking-widest shrink-0">
+              {brand.hashtags.join('  •  ')} &nbsp;•&nbsp;
             </span>
           ))}
         </div>
