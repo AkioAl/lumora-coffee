@@ -2,6 +2,21 @@ export type MenuCategory = 'kopi' | 'non-coffee' | 'food' | 'snack' | 'dessert'
 
 export type MenuSubTab = 'overview' | 'signature' | 'best-seller' | 'favorites'
 
+export interface DrinkLayer {
+  id: string
+  name: string
+  ratio: number
+  color: string
+  specNote: string
+  recommendedBoost?: 'Normal' | '+Extra Espresso Shot' | '+Extra Sea Salt Foam'
+}
+
+export interface SensoryProfile {
+  body: number
+  sweetness: number
+  creaminess: number
+}
+
 export interface MenuItem {
   id: string
   category: MenuCategory
@@ -11,6 +26,27 @@ export interface MenuItem {
   priceMax: number
   badge: 'SIGNATURE' | 'BEST SELLER' | null
   image: string
+  layers?: DrinkLayer[]
+  sensory?: SensoryProfile
+}
+
+export type WfcZoneMode = 'wfc-power' | 'golden-hour' | 'communal'
+
+export interface BranchZone {
+  id: string
+  code: string
+  name: string
+  mode: WfcZoneMode
+  x: number
+  y: number
+  w: number
+  h: number
+  powerOutlets: string
+  wifiSignal: string
+  noiseLevel: 'Quiet' | 'Moderate' | 'Lively'
+  capacity: string
+  bestTime: string
+  specNote: string
 }
 
 export interface Location {
@@ -27,6 +63,28 @@ export interface Location {
   mapsEmbedUrl: string
   facilities: string[]
   image: string
+  zones: BranchZone[]
+}
+
+export type OrderType = 'WFC Dine-In' | 'Takeaway' | 'Santap di Rumah'
+
+export type DrinkTemp = 'Iced' | 'Hot'
+
+export type DrinkSweetness = 'Normal 100%' | 'Less Sweet 50%'
+
+export type DrinkAddon = 'Normal' | '+Extra Espresso Shot' | '+Extra Sea Salt Foam'
+
+export interface BaristaTicketItem {
+  uid: string
+  menuId: string
+  name: string
+  category: MenuCategory
+  unitPrice: number
+  quantity: number
+  temp?: DrinkTemp
+  sweetness?: DrinkSweetness
+  addon?: DrinkAddon
+  note?: string
 }
 
 export interface Program {

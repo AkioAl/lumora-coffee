@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { MessageCircle, Menu, X } from 'lucide-react'
+import { MessageCircle, Menu, X, Receipt } from 'lucide-react'
 import { brand } from '@/data/brand'
+import { useBaristaTicket } from '@/context/BaristaTicketContext'
 
 const navLinks = [
   { label: 'HOME',      href: '/' },
@@ -20,6 +21,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
+  const { totalCount, setIsOpen } = useBaristaTicket()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -78,13 +80,26 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label="Buka tiket pesanan barista"
+            className="inline-flex items-center gap-2 min-h-[44px] px-3 sm:px-4 py-2 border border-brand-border hover:border-brand-tosca bg-brand-surface text-brand-white hover:text-brand-tosca text-xs font-mono font-bold tracking-widest uppercase transition-colors"
+          >
+            <Receipt className="w-4 h-4 text-brand-tosca" />
+            <span className="hidden sm:inline">TIKET</span>
+            <span className="px-1.5 py-0.5 text-[10px] bg-brand-tosca text-brand-bg font-bold">
+              {totalCount}
+            </span>
+          </button>
+
           <a
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="
-              hidden md:inline-flex items-center gap-2
+              hidden lg:inline-flex items-center gap-2
               min-h-[44px] px-5 py-2.5
               bg-brand-tosca hover:bg-brand-toscaLight
               text-brand-bg text-xs font-bold

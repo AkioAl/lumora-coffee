@@ -7,6 +7,7 @@ import { MapPin, Clock, Wifi, Navigation, ArrowUpRight } from 'lucide-react'
 import { Location } from '@/types'
 import { brand } from '@/data/brand'
 import LocationCard from '@/components/locations/LocationCard'
+import WfcFloorplanBlueprint from '@/components/locations/WfcFloorplanBlueprint'
 import {
   calculateHaversineKm,
   formatDistanceAndEta,
@@ -259,7 +260,9 @@ export default function LocationDetail({
         </div>
       </div>
 
-      <div className="px-6 sm:px-8 lg:px-16 py-12">
+      <WfcFloorplanBlueprint location={location} />
+
+      <div className="px-6 sm:px-8 lg:px-16 py-12 border-t border-brand-border">
         <h2 className="text-brand-white font-bold text-sm tracking-widest mb-6 uppercase">
           PETA LOKASI CABANG — {location.name.toUpperCase()}
         </h2>

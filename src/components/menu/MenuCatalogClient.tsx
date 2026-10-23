@@ -16,14 +16,17 @@ import {
   Coffee,
   Thermometer,
   Wheat,
+  Plus,
+  Eye,
 } from 'lucide-react'
 import { menuItems } from '@/data/menu'
-import { brand } from '@/data/brand'
-import { MenuCategory, MenuItem, MenuSubTab } from '@/types'
+import { DrinkAddon, MenuCategory, MenuItem, MenuSubTab } from '@/types'
 import { formatPrice } from '@/lib/format'
+import { useBaristaTicket } from '@/context/BaristaTicketContext'
 import MenuCategoryTabs from '@/components/menu/MenuCategoryTabs'
 import MenuSubNav from '@/components/menu/MenuSubNav'
 import MenuCard from '@/components/menu/MenuCard'
+import CupXRayCanvas from '@/components/menu/CupXRayCanvas'
 
 const FAVORITES_STORAGE_KEY = 'lumora_favorite_menu_ids'
 
@@ -75,18 +78,31 @@ function FeaturedHero({
   onToggleFavorite: (id: string) => void
 }) {
   const [imgError, setImgError] = useState(false)
+  const [heroView, setHeroView] = useState<'xray' | 'photo'>('xray')
+  const [selectedTemp, setSelectedTemp] = useState<'Iced' | 'Hot'>('Iced')
+  const [selectedSweetness, setSelectedSweetness] = useState<'Normal 100%' | 'Less Sweet 50%'>('Normal 100%')
+  const { addItem } = useBaristaTicket()
   const specs = categorySpecs[category]
-  const orderUrl = `${brand.socialLinks.whatsapp}?text=${encodeURIComponent(
-    `Halo Lumora Coffee, saya ingin pesan ${item.name} (${formatPrice(item.priceMin, item.priceMax)}).`
-  )}`
+  const isDrink = category === 'kopi' || category === 'non-coffee'
 
   useEffect(() => {
     setImgError(false)
-  }, [item.id])
+    setHeroView(item.layers ? 'xray' : 'photo')
+  }, [item.id, item.layers])
+
+  const handleAddFeatured = (addon: DrinkAddon = 'Normal') => {
+    addItem(item, {
+      quantity: 1,
+      temp: isDrink ? selectedTemp : undefined,
+      sweetness: isDrink ? selectedSweetness : undefined,
+      addon: isDrink ? addon : undefined,
+      openDrawerAfter: true,
+    })
+  }
 
   return (
     <div className="bg-brand-surface border-b border-brand-border px-6 sm:px-8 lg:px-16 py-10 sm:py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[58%_42%] gap-8 lg:gap-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[54%_46%] gap-8 lg:gap-12 items-start">
         <div>
           {item.badge && (
             <span className="inline-block bg-brand-tosca text-brand-bg text-[10px] font-mono font-bold tracking-widest px-2.5 py-1 mb-4 uppercase">
@@ -109,7 +125,55 @@ function FeaturedHero({
             {formatPrice(item.priceMin, item.priceMax)}
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-7 pt-6 border-t border-brand-border">
+          {isDrink && (
+            <div className="mt-6 pt-5 border-t border-brand-border grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono">
+              <div>
+                <span className="text-[10px] text-brand-muted tracking-widest uppercase block mb-1.5">
+                  PILIH SUHU SAJIAN
+                </span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(['Iced', 'Hot'] as const).map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setSelectedTemp(t)}
+                      className={`min-h-[44px] text-xs font-bold uppercase border transition-colors ${
+                        selectedTemp === t
+                          ? 'bg-brand-tosca border-brand-tosca text-brand-bg'
+                          : 'bg-brand-bg border-brand-border text-brand-muted hover:text-brand-white'
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[10px] text-brand-muted tracking-widest uppercase block mb-1.5">
+                  TAKaran MANIS
+                </span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(['Normal 100%', 'Less Sweet 50%'] as const).map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setSelectedSweetness(s)}
+                      className={`min-h-[44px] px-2 text-[10px] font-bold uppercase border transition-colors ${
+                        selectedSweetness === s
+                          ? 'bg-brand-tosca border-brand-tosca text-brand-bg'
+                          : 'bg-brand-bg border-brand-border text-brand-muted hover:text-brand-white'
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 pt-5 border-t border-brand-border">
             {specs.map(({ icon: Icon, code, label, sub }) => (
               <div
                 key={label}
@@ -130,10 +194,9 @@ function FeaturedHero({
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mt-8">
-            <a
-              href={orderUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => handleAddFeatured('Normal')}
               className="
                 inline-flex items-center justify-center min-h-[44px] gap-2
                 bg-brand-tosca hover:bg-brand-toscaLight
@@ -143,8 +206,9 @@ function FeaturedHero({
                 text-xs sm:text-sm tracking-widest uppercase
               "
             >
-              PESAN SEKARANG
-            </a>
+              <Plus className="w-4 h-4" />
+              TAMBAH KE TIKET BARISTA
+            </button>
             <button
               type="button"
               onClick={() => onToggleFavorite(item.id)}
@@ -165,20 +229,59 @@ function FeaturedHero({
           </div>
         </div>
 
-        <div className="relative aspect-square max-w-md mx-auto md:max-w-none w-full overflow-hidden bg-brand-border border border-brand-tosca/40">
-          {imgError ? (
-            <div className="w-full h-full flex items-center justify-center">
-              <Coffee className="w-12 h-12 text-brand-tosca opacity-40" />
+        <div className="flex flex-col gap-3">
+          {item.layers && (
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setHeroView('xray')}
+                className={`min-h-[44px] px-3.5 py-2 text-[10px] font-mono font-bold tracking-widest uppercase border transition-colors ${
+                  heroView === 'xray'
+                    ? 'bg-brand-tosca border-brand-tosca text-brand-bg'
+                    : 'bg-brand-bg border-brand-border text-brand-muted hover:text-brand-white'
+                }`}
+              >
+                BEDAH X-RAY FLUIDA
+              </button>
+              <button
+                type="button"
+                onClick={() => setHeroView('photo')}
+                className={`min-h-[44px] px-3.5 py-2 text-[10px] font-mono font-bold tracking-widest uppercase border transition-colors inline-flex items-center gap-1.5 ${
+                  heroView === 'photo'
+                    ? 'bg-brand-tosca border-brand-tosca text-brand-bg'
+                    : 'bg-brand-bg border-brand-border text-brand-muted hover:text-brand-white'
+                }`}
+              >
+                <Eye className="w-3.5 h-3.5" />
+                FOTO STUDIO
+              </button>
             </div>
-          ) : (
-            <Image
-              src={item.image}
-              alt={item.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 42vw"
-              className="object-cover object-center"
-              onError={() => setImgError(true)}
+          )}
+
+          {heroView === 'xray' && item.layers ? (
+            <CupXRayCanvas
+              itemName={item.name}
+              layers={item.layers}
+              sensory={item.sensory}
+              onQuickOrderLayer={(addon) => handleAddFeatured(addon)}
             />
+          ) : (
+            <div className="relative aspect-square max-w-md mx-auto md:max-w-none w-full overflow-hidden bg-brand-border border border-brand-tosca/40">
+              {imgError ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Coffee className="w-12 h-12 text-brand-tosca opacity-40" />
+                </div>
+              ) : (
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 42vw"
+                  className="object-cover object-center"
+                  onError={() => setImgError(true)}
+                />
+              )}
+            </div>
           )}
         </div>
       </div>

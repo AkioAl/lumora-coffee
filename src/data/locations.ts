@@ -1,4 +1,78 @@
-import { Location } from '@/types'
+import { BranchZone, Location } from '@/types'
+
+function createBranchZones(
+  branchCode: string,
+  outdoorTitle: string,
+  outdoorTime: string,
+  outdoorNote: string
+): BranchZone[] {
+  return [
+    {
+      id: `${branchCode}-z1`,
+      code: 'Z-01',
+      name: 'Indoor Quiet WFC Booth',
+      mode: 'wfc-power',
+      x: 30,
+      y: 30,
+      w: 220,
+      h: 135,
+      powerOutlets: '2 Stop Kontak Universal / Meja',
+      wifiSignal: '5 GHz Dedicated (-42 dBm · Dekat Router)',
+      noiseLevel: 'Quiet',
+      capacity: '1–2 Kursi per Booth (Total 14 Kursi)',
+      bestTime: '08:00 – 17:00 WIB (Deep Work)',
+      specNote: 'Area ber-AC tenang dengan pencahayaan warm-neutral 4000K bebas silau layar laptop.',
+    },
+    {
+      id: `${branchCode}-z2`,
+      code: 'Z-02',
+      name: 'Communal Power Table',
+      mode: 'communal',
+      x: 270,
+      y: 30,
+      w: 240,
+      h: 135,
+      powerOutlets: '8 Titik Pop-Up Socket di Tengah Meja',
+      wifiSignal: '5 GHz Mesh (-46 dBm · Stabil untuk Zoom)',
+      noiseLevel: 'Moderate',
+      capacity: '8–12 Kursi Meja Panjang',
+      bestTime: '10:00 – 21:00 WIB (Diskusi & Sprint Tim)',
+      specNote: 'Meja kayu solid bentang lebar untuk kerja kelompok, rapat komunitas, dan buka laptop bersama.',
+    },
+    {
+      id: `${branchCode}-z3`,
+      code: 'Z-03',
+      name: 'Espresso Bar & Quick Lounge',
+      mode: 'wfc-power',
+      x: 30,
+      y: 185,
+      w: 220,
+      h: 125,
+      powerOutlets: '4 Stop Kontak di Bawah Bar Counter',
+      wifiSignal: '5 GHz Utama (-40 dBm)',
+      noiseLevel: 'Moderate',
+      capacity: '6 Kursi Bar + 8 Kursi Sofa',
+      bestTime: '07:30 – 11:00 WIB (Morning Brew)',
+      specNote: 'Menghadap langsung ke mesin espresso dan area seduh barista dengan aroma kopi segar.',
+    },
+    {
+      id: `${branchCode}-z4`,
+      code: 'Z-04',
+      name: outdoorTitle,
+      mode: 'golden-hour',
+      x: 270,
+      y: 185,
+      w: 360,
+      h: 125,
+      powerOutlets: '4 Stop Kontak Tahan Cuaca di Pilar',
+      wifiSignal: '2.4/5 GHz Outdoor Repeater (-54 dBm)',
+      noiseLevel: 'Lively',
+      capacity: '20–28 Kursi Terbuka',
+      bestTime: outdoorTime,
+      specNote: outdoorNote,
+    },
+  ]
+}
 
 export const locations: Location[] = [
   {
@@ -15,6 +89,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.1783,106.8019&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Indoor Luas', 'Outdoor Teduh', 'Musholla'],
     image: '/images/locations/Jakarta.jpg',
+    zones: createBranchZones(
+      'tomang',
+      'Courtyard OOTD & Acoustic Stage',
+      '16:00 – 18:30 WIB (Golden Hour & Musikagram)',
+      'Taman terbuka dengan dinding ekspos industrial dan cahaya matahari sore miring untuk spot #OOTDdiLumora.'
+    ),
   },
   {
     id: 'gading-serpong',
@@ -30,6 +110,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.2415,106.6285&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Indoor Luas', 'Area Parkir Luas'],
     image: '/images/locations/cafe.jpg',
+    zones: createBranchZones(
+      'serpong',
+      'Terrace Breeze & Rider Deck',
+      '16:30 – 21:00 WIB (Sore & Night Hangout)',
+      'Teras depan menghadap jalur parkir komunitas motor dengan sirkulasi udara terbuka.'
+    ),
   },
   {
     id: 'cinere',
@@ -45,6 +131,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.3328,106.7834&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Outdoor Teduh', 'Musholla'],
     image: '/images/locations/Depok.jpg',
+    zones: createBranchZones(
+      'cinere',
+      'Shaded Garden Patio',
+      '15:30 – 18:00 WIB (Teduh Sore)',
+      'Area semi-outdoor dinaungi pepohonan rindang yang sejuk untuk ngobrol santai selepas WFC.'
+    ),
   },
   {
     id: 'malabar',
@@ -60,6 +152,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.5902,106.8075&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Rooftop Semi-Outdoor', 'Udara Sejuk'],
     image: '/images/locations/Bogor.jpg',
+    zones: createBranchZones(
+      'malabar',
+      'Pine-Breeze Rooftop Deck',
+      '15:00 – 18:30 WIB (Kabut Sore & Sunset Bogor)',
+      'Dek lantai atas dengan udara sejuk Kota Hujan dan latar siluet pepohonan tinggi.'
+    ),
   },
   {
     id: 'vida-bekasi',
@@ -75,6 +173,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.3164,106.9822&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Outdoor Lakeside', 'Rooftop'],
     image: '/images/locations/Batam.jpg',
+    zones: createBranchZones(
+      'vida',
+      'Lakeside Golden Hour Rooftop',
+      '16:15 – 18:15 WIB (Golden Hour Sunset)',
+      'Sudut favorit kreator konten dengan pantulan cahaya senja terbuka tanpa halangan gedung.'
+    ),
   },
   {
     id: 'tenggilis',
@@ -90,6 +194,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-7.3195,112.7538&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Indoor Luas', 'Ruang Diskusi'],
     image: '/images/locations/Surabaya.jpg',
+    zones: createBranchZones(
+      'tenggilis',
+      'Evening Courtyard & Community Amphitheater',
+      '17:00 – 22:00 WIB (Angin Malam Surabaya)',
+      'Pelataran berundak industrial untuk kumpul komunitas kampus dan sesi akustik malam.'
+    ),
   },
   {
     id: 'dr-cipto',
@@ -105,6 +215,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.9881,110.4363&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Outdoor Teduh', 'Buka Tengah Malam'],
     image: '/images/locations/Jogja.jpg',
+    zones: createBranchZones(
+      'cipto',
+      'Midnight Veranda & OOTD Wall',
+      '16:30 – 23:30 WIB (Lembur & Nongkrong Malam)',
+      'Veranda terbuka dengan pencahayaan arsitektural hangat yang beroperasi hingga pukul 24:00 WIB.'
+    ),
   },
   {
     id: 'centang-biru-kuningan',
@@ -120,6 +236,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.2241,106.8292&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Zona WFC Tenang', 'Buka Pagi 07:00'],
     image: '/images/locations/Jambi.jpg',
+    zones: createBranchZones(
+      'kuningan',
+      'Skyline Urban Patio',
+      '16:30 – 19:30 WIB (After-Office Golden Hour)',
+      'Area teras dengan latar gedung perkantoran Kuningan untuk melepas penat selepas jam kantor.'
+    ),
   },
   {
     id: 'centang-biru-ampera',
@@ -135,6 +257,12 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.2869,106.8206&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Rooftop Sunset', 'Parkir Mobil & Motor'],
     image: '/images/locations/Aceh.jpg',
+    zones: createBranchZones(
+      'ampera',
+      'Ampera Sunset Rooftop',
+      '16:00 – 18:30 WIB (Sunset & NMR Meet-up)',
+      'Rooftop luas favorit komunitas Jakarta Selatan dengan eksposur langit barat penuh.'
+    ),
   },
   {
     id: 'ayani',
@@ -150,5 +278,11 @@ export const locations: Location[] = [
     mapsEmbedUrl: 'https://maps.google.com/maps?q=-6.9158,107.6327&t=&z=15&ie=UTF8&iwloc=&output=embed',
     facilities: ['WiFi Cepat', 'Stop Kontak Tiap Meja', 'Semi-Outdoor Sejuk', 'Musholla'],
     image: '/images/locations/Bandung.jpg',
+    zones: createBranchZones(
+      'ayani',
+      'Bandung Breeze Courtyard',
+      '15:30 – 18:30 WIB (Sore Sejuk Bandung)',
+      'Balkon semi-terbuka dengan hembusan angin sore khas Bandung dan dinding bertekstur monokrom.'
+    ),
   },
 ]
